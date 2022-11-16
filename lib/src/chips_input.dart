@@ -448,7 +448,7 @@ class ChipsInputState<T> extends State<ChipsInput<T>>
     );
 
     return RawKeyboardListener(
-      focusNode: _focusNode,
+      focusNode: _effectiveFocusNode,
       onKey: (event) {
         final str = currentTextEditingValue.text;
         /// Make sure to filter event since without checking 'RawKeyDownEvent' will trigger this multiple times (2) because of RawKeyUpEvent
