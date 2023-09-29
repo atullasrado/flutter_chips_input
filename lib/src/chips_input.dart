@@ -519,4 +519,9 @@ class ChipsInputState<T> extends State<ChipsInput<T>>
   
   @override
   void performSelector(String selectorName) {}
+  
+  @override
+  void insertContent(KeyboardInsertedContent content) {
+    // TODO: implement insertContent
+  }
 }
