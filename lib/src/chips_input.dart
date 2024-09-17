@@ -287,7 +287,11 @@ class ChipsInputState<T> extends State<ChipsInput<T>>
     Future.delayed(const Duration(milliseconds: 300), () {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final renderBox = context.findRenderObject() as RenderBox;
-        await Scrollable.of(context)?.position.ensureVisible(renderBox);
+        await Scrollable.of(context).position.ensureVisible(renderBox).then((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _suggestionsBoxController.overlayEntry?.markNeedsBuild();
+          });
+        });
       });
     });
   }
@@ -435,7 +439,7 @@ class ChipsInputState<T> extends State<ChipsInput<T>>
                 maxLines: 1,
                 overflow: widget.textOverflow,
                 style: widget.textStyle ??
-                    theme.textTheme.subtitle1!.copyWith(height: 1.5),
+                    theme.textTheme.titleMedium!.copyWith(height: 1.5),
               ),
             ),
             Flexible(
@@ -453,7 +457,7 @@ class ChipsInputState<T> extends State<ChipsInput<T>>
         final str = currentTextEditingValue.text;
         /// Make sure to filter event since without checking 'RawKeyDownEvent' will trigger this multiple times (2) because of RawKeyUpEvent
         if (
-          event.runtimeType.toString() == 'RawKeyDownEvent' &&
+          event is RawKeyDownEvent &&
           event.logicalKey == LogicalKeyboardKey.backspace &&
           str.isNotEmpty
         ) {
@@ -509,4 +513,15 @@ class ChipsInputState<T> extends State<ChipsInput<T>>
 
   @override
   void removeTextPlaceholder() {}
+  
+  @override
+  void didChangeInputControl(TextInputControl? oldControl, TextInputControl? newControl) {}
+  
+  @override
+  void performSelector(String selectorName) {}
+  
+  @override
+  void insertContent(KeyboardInsertedContent content) {
+    // TODO: implement insertContent
+  }
 }
